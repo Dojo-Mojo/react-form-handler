@@ -8,14 +8,11 @@ TBA
 
 ## Getting Started
 
-### Include
-
-```js
-import { Input, Form, Submit } from 'react-form-handler/form'
-```
 ### Basic Use
 
 ```js
+import { Input, Form, Submit } from 'react-form-handler/form'
+
 export class BasicUse extends Component {
   state = {
     testForm: {
@@ -62,9 +59,9 @@ export class BasicUse extends Component {
 
 ```js
 {
-	attr: val,
+  attr: val,
   parrentAttr: {
-  	childAttr: val
+    childAttr: val
   }
 }
 
@@ -76,13 +73,13 @@ export class BasicUse extends Component {
 ```js
 import { isPositiveInteger, cannotExceed } from 'react-form-handler/validations'
 
-  <Input
-    name="age"
-    label="Age"
-    type="number"
-    required
-    validations={[isPositiveInteger, cannotExceed(100)]}
-  />
+<Input
+  name="age"
+  label="Age"
+  type="number"
+  required
+  validations={[isPositiveInteger, cannotExceed(100)]}
+/>
 ```
 ##### Custom Validations
 The core of a validation is throwing an error in context, so to add a validation the validation needs only to throw an error
@@ -103,30 +100,30 @@ const customValidation = value => {  // custom synchronous validation
 #### Visual Customization
 We're using [React Toolbox](http://react-toolbox.io) under the hood which uses [CSS Modules](https://github.com/css-modules/css-modules).  Each input typically contains three components: label, input, and error text.  Themeing any of these is optional and can be passed in the following manner:
 ```js
-  import inputTheme from 'css/themes/input.css'
-  import labelTheme from 'css/themes/label.css'
-  /*
-  .label {
-    color: blue;
-  }*/
-  import errorTheme from 'css/themes/error.css'
-  /*
-  .label {
-    color: red;
-  }*/
-  import tooltipTheme from 'css/themes/tooltip.css'
-  /*
-  .tooltip {
-    font-size: 8px
-  }*/
+import inputTheme from 'css/themes/input.css'
+/*
+.input {
+  padding: 0 0 32px;
+  max-height: 100px;
+}
 
-  <Input
-    name="firstName"
-    label="First Name"
-    tooltip="This is what you usually go by"
-    inputTheme={inputTheme}
-    labelTheme={labelTheme}
-    errorTheme={errorTheme}
-    tooltipTheme={tooltipTheme}
-  />
+.label {
+  color: blue;
+}
+
+.error {
+  color: red;
+}
+
+.tooltip {
+  font-size: 8px
+}
+*/
+
+<Input
+  name="firstName"
+  label="First Name"
+  tooltip="This is what you usually go by"
+  inputTheme={inputTheme}
+/>
 ```
