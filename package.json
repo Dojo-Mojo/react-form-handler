@@ -1,0 +1,27 @@
+{
+  "name": "React Form Handler",
+  "version": "1.0.0",
+  "description": "A pattern to hold and validate costomizable form inputs",
+  "keywords": ["react", "form"],
+  "website": "https://github.com/Dojo-Mojo/react-form-handler#readme",
+  "bugs": "https://github.com/Dojo-Mojo/react-form-handler/issues",
+  "license": "MIT",
+  "author": "Nic Favaro <nic@dojomojo.ninja>",
+  "contributors": [
+    "Dan Baker <dan@dojomojo.ninja>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dojo-Mojo/react-form-handler.git"
+  },
+  "dependencies": {
+    "react": "16.2.0",
+    "d3": "3.5.6",
+    "lodash": "3.9.3",
+  },
+  "devDependencies": {
+    "react-toolbox": "^2.0.0-beta.6",
+  },
+  "scripts": {
+  }
+}
