@@ -15,9 +15,9 @@
     "form",
     "input"
   ],
-  "authors": [
-    "Nicolas Favaro",
-    "Daniel Baker"
+  "author": "Nic Favaro <nic@dojomojo.ninja>",
+  "contributors": [
+    "Dan Baker <dan@dojomojo.ninja>"
   ],
   "license": "MIT",
   "bugs": {
