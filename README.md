@@ -63,13 +63,14 @@ export class BasicUse extends Component {
 ```js
 {
 	attr: val,
-    parrentAttr: {
-    	childAttr: val
-    }
+  parrentAttr: {
+  	childAttr: val
+  }
 }
-  <Input
-    name="parrentAttr.childAttr"
-  />
+
+<Input
+  name="parrentAttr.childAttr"
+/>
 ```
 #### Validations
 ```js
@@ -86,7 +87,7 @@ import { isPositiveInteger, cannotExceed } from 'react-form-handler/validations'
 ##### Custom Validations
 The core of a validation is throwing an error in context, so to add a validation the validation needs only to throw an error
 ```js
-asyncCustomValidation = (value) => { // asynchronous custom validation
+const asyncCustomValidation = (value) => { // asynchronous custom validation
   return new Promise((res, rej) => {
     setTimeout(() => {
       testFails() ? rej('Async validation failed') : res()
