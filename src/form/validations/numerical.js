@@ -1,4 +1,4 @@
-import d3 from 'd3'
+import { format } from 'd3-format'
 
 const _isPositive = value => value && +value > 0
 const _isPositiveOrZero = value => value && +value >= 0
@@ -22,7 +22,7 @@ export const isPositiveInteger = value => {
   }
 }
 
-const _defCannotExceedError = max => `Cannot exceed ${d3.format(',')(max)}`
+const _defCannotExceedError = max => `Cannot exceed ${format(',')(max)}`
 
 export const cannotExceed = (max, error = _defCannotExceedError) => value => {
   if (+value > max) {
