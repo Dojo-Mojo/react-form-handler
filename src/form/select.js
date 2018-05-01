@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+/*import React, { Component } from 'react'
 import { string, array, bool } from 'prop-types'
 
 import Dropdown from 'react-toolbox/lib/dropdown'
@@ -126,3 +126,4 @@ export class SelectRange extends Component {
     )
   }
 }
+*/

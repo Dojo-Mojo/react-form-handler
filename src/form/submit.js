@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+/*import React, { Component } from 'react'
 import { string, bool } from 'prop-types'
 
 import { Button } from 'react-toolbox/lib/button'
@@ -48,3 +48,4 @@ export class Submit extends Component {
     )
   }
 }
+*/

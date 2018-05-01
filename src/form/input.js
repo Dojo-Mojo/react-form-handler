@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+/*import React, { Component } from 'react'
 import { string, array, number, bool } from 'prop-types'
 import { maxLength } from './validations'
 
@@ -145,3 +145,4 @@ export class Input extends Component {
     )
   }
 }
+*/
