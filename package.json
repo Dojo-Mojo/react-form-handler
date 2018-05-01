@@ -1,12 +1,13 @@
 {
   "name": "react-form-handler",
-  "version": "1.0.0-beta.2",
+  "version": "1.0.0-beta.3",
   "description": "A pattern to hold, validate, customize forms & inputs in React.",
   "main": "dist/index.js",
   "module": "es/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node ./tools/build.js"
+    "clean": "rm -rf es/ dist/",
+    "build": "npm run clean && node ./tools/build.js"
   },
   "repository": {
     "type": "git",
