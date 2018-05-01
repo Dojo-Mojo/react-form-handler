@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { object, string, func, bool, shape, array } from 'prop-types'
 import { required as isRequired } from './validations'
 
-import format from 'd3-format'
+import { format } from 'd3-format'
 
 import get from 'lodash.get'
 
