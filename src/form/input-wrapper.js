@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import { object, string, func, bool, shape, array } from 'prop-types'
 import { required as isRequired } from './validations'
 
-import d3 from 'd3'
+import format from 'd3-format'
 
-import { get } from 'lodash'
+import get from 'lodash.get'
 
 const getFormattedNumber = (value, formatter) => {
   if (formatter) {
@@ -15,7 +15,7 @@ const getFormattedNumber = (value, formatter) => {
     return value
   }
 
-  return d3.format(',')(value)
+  return format(',')(value)
 }
 
 // provides render prop accessing form model/actions from context provided

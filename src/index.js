@@ -1,3 +1,5 @@
+import 'babel-polyfill'
+
 export { Form } from './form/form'
 export { withForm } from './form/withForm'
 export { InputWrapper, SubmitWrapper } from './form/input-wrapper'

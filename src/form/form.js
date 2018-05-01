@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { object, string, func, bool, shape, array } from 'prop-types'
 
-import { set, get, merge } from 'lodash'
+import set from 'lodash.set'
+import get from 'lodash.get'
+import merge from 'lodash.merge'
 
 export class Form extends Component {
   static propTypes = {

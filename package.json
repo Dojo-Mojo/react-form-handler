@@ -2,7 +2,8 @@
   "name": "react-form-handler",
   "version": "1.0.0",
   "description": "A pattern to hold, validate, customize forms & inputs in React.",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "module": "es/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -19,21 +20,29 @@
   "contributors": [
     "Dan Baker <dan@dojomojo.ninja>"
   ],
+  "files": [
+    "dist",
+    "es"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Dojo-Mojo/react-form-handler/issues"
   },
   "homepage": "https://github.com/Dojo-Mojo/react-form-handler#readme",
   "dependencies": {
+    "d3-format": "^1.2.2",
     "lodash.get": "^4.4.2",
     "lodash.merge": "^4.6.1",
     "lodash.set": "^4.3.2",
     "prop-types": "^15.6.1"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-imports": "^1.5.0",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.1",
-    "webpack": "^4.6.0"
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1"
   },
   "peerDependencies": {
     "react": ">=15"
