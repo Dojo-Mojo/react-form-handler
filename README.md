@@ -1,6 +1,8 @@
 # react-form-handler
 
-> An easily customizable input form
+> An easily customizable reliable pattern to handling form data
+
+This package is designed to establish a pattern for validating inputs in a form, and knowing when to pass data from the form to the parent data model
 
 ## Live Demo
 
@@ -10,8 +12,11 @@ TBA
 
 ### Basic Use
 
+The prototype for the most basic use case can be as simple as the following
 ```js
-import { Input, Form, Submit } from 'react-form-handler/form'
+import { InputWrapper, Form, Submit } from 'react-form-handler/form'
+
+import { Input } from './Input'
 
 export class BasicUse extends Component {
   state = {
@@ -51,8 +56,67 @@ export class BasicUse extends Component {
   }
 }
 ```
+But this requires you to set up your `Input` class which can be done in the following manner:
+```js
+import React, { Component } from 'react'
+import { InputWrapper } from 'react-form-handler'
 
-### Customization
+class Input extends Component {
+  render() {
+    let {
+      name, // required
+      validations, // optional
+      required, // optional
+      label, // optional
+      type, // optional type = 'text'
+      disabled, // optional
+    } = this.props
+
+    return (
+      <InputWrapper
+        name={name}
+        type={type}
+        required={required}
+        validations={validations}
+        render={({
+          value,
+          update,
+          error,
+          inputDisabled,
+          onFocus,
+          onBlur
+        }) => {
+          return (
+            <div>
+              <label>
+                {label}
+                <input
+                  value={value} // handled
+                  onFocus={onFocus} // handled
+                  onBlur={onBlur} // handled
+                  disabled={disabled || inputDisabled} // handled
+                  onChange={(e) => {
+                    update(e.target.value) // expects the value
+                  }}
+                  />
+              </label>
+              { error ?
+                <span>Error {error}</span>
+                :
+                null
+              }
+            </div>
+          )
+        }}
+      />
+    )
+  }
+}
+```
+
+This implementation using raw html elements gives you the freedom to apply whatever styles you need in the manner that fits your project, the purpose of package is to handle the heavy lifting of deciding what to validate when, and how to pass data up to the parent store.
+
+### Customization Options
 
 
 #### Nested Fields
@@ -96,34 +160,4 @@ const customValidation = value => {  // custom synchronous validation
     throw 'Validation failed'
   }
 }
-```
-#### Visual Customization
-We're using [React Toolbox](http://react-toolbox.io) under the hood which uses [CSS Modules](https://github.com/css-modules/css-modules).  Each input typically contains three components: label, input, and error text.  Themeing any of these is optional and can be passed in the following manner:
-```js
-import inputTheme from 'css/themes/input.css'
-/*
-.input {
-  padding: 0 0 32px;
-  max-height: 100px;
-}
-
-.label {
-  color: blue;
-}
-
-.error {
-  color: red;
-}
-
-.tooltip {
-  font-size: 8px
-}
-*/
-
-<Input
-  name="firstName"
-  label="First Name"
-  tooltip="This is what you usually go by"
-  inputTheme={inputTheme}
-/>
 ```
