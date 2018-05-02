@@ -34,6 +34,7 @@ export class InputWrapper extends Component {
   }
 
   static defaultProps = {
+    type: 'text',
     validations: [],
     required: false,
   }
@@ -101,39 +102,10 @@ export class InputWrapper extends Component {
     return render({
       value: this.formatNumber(),
       update: updateFormModel.bind(null, name, type || 'text'),
-      validate: validateField.bind(null, name),
       error: errors[name],
-      isValidating: validating[name],
-      formDisabled,
-      updateFormModel,
-      validateField,
-      showRealValue: this.showRealValue,
-      showPrettyValueAndValidate: this.showPrettyValueAndValidate
-    })
-  }
-}
-
-export class SubmitWrapper extends Component {
-  static propTypes = {
-    render: func.isRequired,
-  }
-
-  static contextTypes = {
-    form: object.isRequired,
-    formActions: object.isRequired,
-  }
-
-  render() {
-    const {
-      form: { formDisabled, formValidating, formValid },
-      formActions: { submitForm },
-    } = this.context
-
-    return this.props.render({
-      formDisabled,
-      formValidating,
-      formValid,
-      submitForm,
+      inputDisabled: validating[name] || formDisabled,
+      onFocus: this.showRealValue,
+      onBlur: this.showPrettyValueAndValidate
     })
   }
 }
