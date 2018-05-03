@@ -82,7 +82,9 @@ class Input extends Component {
           value,
           update,
           error,
-          inputDisabled,
+          inputValidating,
+          formValidating,
+          formDisabled,
           onFocus,
           onBlur
         }) => {
@@ -92,9 +94,9 @@ class Input extends Component {
                 {label}
                 <input
                   value={value} // handled
-                  onFocus={onFocus} // handled
-                  onBlur={onBlur} // handled
-                  disabled={disabled || inputDisabled} // handled
+                  onFocus={onFocus} // handled, hides errors
+                  onBlur={onBlur} // handled, triggers validation, and applies formatting
+                  disabled={disabled || inputValidating || formDisabled} // handled
                   onChange={(e) => {
                     update(e.target.value) // expects the value
                   }}

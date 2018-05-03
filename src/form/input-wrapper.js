@@ -93,7 +93,7 @@ export class InputWrapper extends Component {
 
   render() {
     const {
-      form: { formModel, errors, validating, formDisabled },
+      form: { formModel, errors, validating, formValidating, formDisabled },
       formActions: { updateFormModel, validateField },
     } = this.context
 
@@ -101,9 +101,11 @@ export class InputWrapper extends Component {
 
     return render({
       value: this.formatNumber(),
-      update: updateFormModel.bind(null, name, type || 'text'),
+      update: updateFormModel.bind(null, name, type),
       error: errors[name],
-      inputDisabled: validating[name] || formDisabled,
+      formValidating: formValidating,
+      inputValidating: validating[name],
+      formDisabled,
       onFocus: this.showRealValue,
       onBlur: this.showPrettyValueAndValidate
     })
