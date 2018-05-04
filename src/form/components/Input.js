@@ -71,7 +71,7 @@ export class Input extends Component {
                   onChange={e => update(e.target.value)}
                 />
               </label>
-              {error ? <span>Error {error}</span> : null}
+              {error ? <span>Error: {error}</span> : null}
             </div>
           )
         }}

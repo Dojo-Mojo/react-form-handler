@@ -7,7 +7,6 @@ import merge from 'lodash.merge'
 
 export class Form extends Component {
   static propTypes = {
-    modelName: string,
     model: object,
     updateModel: func,
     handleSubmit: func,
@@ -19,7 +18,6 @@ export class Form extends Component {
 
   static defaultProps = {
     model: {},
-    updateModel: () => {},
     autopersist: false,
     validations: {},
     disabled: false,
@@ -140,20 +138,20 @@ export class Form extends Component {
     this.setState({ formModel, errors, synced: false })
   }
 
-  updateModelField = name => {
+  updateModelField = (name, updater = this.props.updateModel) => {
     const payload = set({}, name, get(this.state.formModel, name))
-    this.props.updateModel(payload)
+    updater && updater(payload)
 
     const { autopersist } = this.props
     autopersist && this.persistModelField(name)
   }
 
   updateModel = (updater = this.props.updateModel) => {
-    updater(this.state.formModel)
+    updater && updater(this.state.formModel)
 
     const { autopersist } = this.props
     this.setState(
-      { synced: true, formModel: {} },
+      { synced: true, formModel: updater ? {} : this.state.formModel },
       () => autopersist && this.persistModel()
     )
   }
@@ -253,7 +251,7 @@ export class Form extends Component {
         </h4>
         <pre>{JSON.stringify(this.getChildContext(), null, 2)}</pre>
         <h4>
-          <br />Current Redux Model
+          <br />Current Parent Model
         </h4>
         <pre>{JSON.stringify(this.props.model, null, 2)}</pre>
       </div>
