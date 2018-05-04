@@ -6,16 +6,11 @@ import { format } from 'd3-format'
 
 import get from 'lodash.get'
 
-const getFormattedNumber = (value, formatter) => {
-  if (formatter) {
-    return formatter(value)
-  }
-
-  if (!value || isNaN(value)) {
+const getFormattedNumber = (value, formatter = format(',')) => {
+  if (typeof value === 'undefined' || value === '' || isNaN(value)) {
     return value
   }
-
-  return format(',')(value)
+  return formatter(value)
 }
 
 // provides render prop accessing form model/actions from context provided
@@ -24,16 +19,20 @@ export class InputWrapper extends Component {
   static propTypes = {
     name: string.isRequired,
     render: func.isRequired,
+
+    type: string,
     validations: array,
     required: bool,
     customValue: func,
+    formatNumber: func,
   }
 
   state = {
-    editing: false
+    editing: false,
   }
 
   static defaultProps = {
+    type: 'text',
     validations: [],
     required: false,
   }
@@ -54,86 +53,48 @@ export class InputWrapper extends Component {
     this.context.formActions.unregisterValidations(this.props.name)
   }
 
-  showRealValue = (e) => {
-    this.setState({
-      editing: true
-    })
-  }
+  showRealValue = () => this.setState({ editing: true })
 
-  showPrettyValueAndValidate = async (e) => {
-    const {
-      formActions: { validateField },
-    } = this.context
-
+  showPrettyValueAndValidate = async () => {
+    const { formActions: { validateField } } = this.context
     const { name } = this.props
 
     await validateField(name)
 
-    this.setState({
-      editing: false
-    })
+    this.setState({ editing: false })
   }
 
   formatNumber = () => {
-    const {
-      form: { formModel, errors, validating, formDisabled },
-      formActions: { updateFormModel, validateField },
-    } = this.context
-    const {
-      editing
-    } = this.state
+    const { form: { formModel } } = this.context
+    const { editing } = this.state
     const { name, render, customValue, formatNumber } = this.props
     if (customValue) {
       return customValue(formModel)
     }
     const value = get(formModel, name, '')
-    return this.props.type === 'number' && !editing ? getFormattedNumber(value, formatNumber) : value
+    return this.props.type === 'number' && !editing
+      ? getFormattedNumber(value, formatNumber)
+      : value
   }
 
   render() {
     const {
-      form: { formModel, errors, validating, formDisabled },
+      form: { formModel, errors, validating, formValidating, formDisabled },
       formActions: { updateFormModel, validateField },
     } = this.context
 
-    const { name, type, render, customValue, formatNumber } = this.props
+    const { name, type, render, customValue } = this.props
 
     return render({
       value: this.formatNumber(),
-      update: updateFormModel.bind(null, name, type || 'text'),
-      validate: validateField.bind(null, name),
-      error: errors[name],
-      isValidating: validating[name],
-      formDisabled,
+      update: updateFormModel.bind(null, name, type),
       updateFormModel,
-      validateField,
-      showRealValue: this.showRealValue,
-      showPrettyValueAndValidate: this.showPrettyValueAndValidate
-    })
-  }
-}
-
-export class SubmitWrapper extends Component {
-  static propTypes = {
-    render: func.isRequired,
-  }
-
-  static contextTypes = {
-    form: object.isRequired,
-    formActions: object.isRequired,
-  }
-
-  render() {
-    const {
-      form: { formDisabled, formValidating, formValid },
-      formActions: { submitForm },
-    } = this.context
-
-    return this.props.render({
+      error: errors[name],
+      formValidating: formValidating,
+      inputValidating: validating[name],
       formDisabled,
-      formValidating,
-      formValid,
-      submitForm,
+      onFocus: this.showRealValue,
+      onBlur: this.showPrettyValueAndValidate,
     })
   }
 }
