@@ -88,6 +88,7 @@ export class InputWrapper extends Component {
     return render({
       value: this.formatNumber(),
       update: updateFormModel.bind(null, name, type),
+      updateFormModel,
       error: errors[name],
       formValidating: formValidating,
       inputValidating: validating[name],
