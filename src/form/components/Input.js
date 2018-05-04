@@ -1,5 +1,13 @@
 import React, { Component } from 'react'
-import { string, array, bool, object, oneOfType, instanceOf } from 'prop-types'
+import {
+  string,
+  array,
+  bool,
+  object,
+  func,
+  oneOfType,
+  instanceOf,
+} from 'prop-types'
 
 import { InputWrapper } from '../input-wrapper'
 
