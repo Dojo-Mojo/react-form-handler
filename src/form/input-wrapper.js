@@ -19,9 +19,12 @@ export class InputWrapper extends Component {
   static propTypes = {
     name: string.isRequired,
     render: func.isRequired,
+
+    type: string,
     validations: array,
     required: bool,
     customValue: func,
+    formatNumber: func,
   }
 
   state = {
