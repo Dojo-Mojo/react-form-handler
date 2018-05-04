@@ -1,143 +1,159 @@
 # react-form-handler
 
-> An easily customizable reliable pattern to handling form data
+> Simple, non-opinionated Form data management in React
 
-This package is designed to establish a pattern for validating inputs in a form, and knowing when to pass data from the form to the parent data model
+This package establishes a pattern for processing inputs in a form, holding
+their data in internal state until fully validated (both synchronously and
+asynchronously), and finally passing that data to a handler function and/or a
+centralized state container like
+[Redux](https://redux.js.org/basics/usage-with-react).
 
 ## Live Demo
 
-TBA
+Coming Soon
 
 ## Getting Started
 
 ### Basic Use
 
-The prototype for the most basic use case can be as simple as the following
+Out of the box, `react-form-handler` provides simple input and submit button
+bindings. All you need to do is pass a handler to the `<Form>` component that
+specifies what to do with the final data:
+
 ```js
-import { InputWrapper, Form, Submit } from 'react-form-handler/form'
+import React, { Component } from 'react'
+import { Form, Input, Submit } from 'react-form-handler'
 
-import { Input } from './Input'
-
-export class BasicUse extends Component {
-  state = {
-    testForm: {
-      firstName: '',
-      lastName: ''
-    }
-  }
-
-  updateForm = (data) => {
-    this.setState(data)
-  }
-
-  submit = () => {
-    // handle submit
-  }
+export default class BasicExample extends Component {
+  handleData = data => window.alert(`My data:\n\n${JSON.stringify(data)}`)
 
   render() {
     return (
-      <Form
-        modelName="testForm"
-        updateModel={this.updateForm}
-        handleSubmit={this.submit}
-      >
-        <Input
-          name="firstName"
-          label="First Name"
-          required
-        />
-        <Input
-          name="lastName"
-          label="Last Name"
-        />
+      <Form handleSubmit={this.handleData}>
+        <Input name="firstName" label="First Name" required />
+        <Input name="lastName" label="Last Name" />
         <Submit />
       </Form>
     )
   }
 }
 ```
-But this requires you to set up your `Input` class which can be done in the following manner:
+
+Our basic implementation uses raw HTML elements, but you can also pass custom
+elements like so (see the [API Docs](#) for a full list of props that will be
+passed to them):
+
+```js
+...
+import { CustomInput, CustomSubmit } from 'your/own/library'
+...
+    <Form handleSubmit={this.handleData}>
+      <Input component={CustomInput} name="firstName" label="First Name" required />
+      <Input component={CustomInput} name="lastName" label="Last Name" />
+      <Submit component={CustomSubmit} />
+    </Form>
+...
+```
+
+### Parent State
+
+For use with a parent or external state, simply pass the state to the `model`
+prop along with an updater function in the `updateModel` prop. The Form
+component will not sync its internal state with the model until the edited
+field(s) are valid:
+
 ```js
 import React, { Component } from 'react'
-import { InputWrapper } from 'react-form-handler'
+import { Form, Input, Submit } from 'react-form-handler'
 
-class Input extends Component {
+export class UseWithExternalStateExample extends Component {
+  state = {
+    testForm: {
+      firstName: '',
+      lastName: '',
+    },
+  }
+
+  updateData = newData => {
+    const oldData = this.state.testForm
+    this.setState({ testForm: { ...oldData, ...newData } })
+    // NOTE: for deeply nested data, you may want to consider using a deep
+    // merger like lodash's _.merge() function
+  }
+
   render() {
-    let {
-      name, // required
-      validations, // optional
-      required, // optional
-      label, // optional
-      type, // optional type = 'text'
-      disabled, // optional
-    } = this.props
-
     return (
-      <InputWrapper
-        name={name}
-        type={type}
-        required={required}
-        validations={validations}
-        render={({
-          value,
-          update,
-          error,
-          inputValidating,
-          formValidating,
-          formDisabled,
-          onFocus,
-          onBlur
-        }) => {
-          return (
-            <div>
-              <label>
-                {label}
-                <input
-                  value={value} // handled
-                  onFocus={onFocus} // handled, hides errors
-                  onBlur={onBlur} // handled, triggers validation, and applies formatting
-                  disabled={disabled || inputValidating || formDisabled} // handled
-                  onChange={(e) => {
-                    update(e.target.value) // expects the value
-                  }}
-                  />
-              </label>
-              { error ?
-                <span>Error {error}</span>
-                :
-                null
-              }
-            </div>
-          )
-        }}
-      />
+      <Form model={this.state.testForm} updateModel={this.updateData}>
+        <Input name="firstName" label="First Name" required />
+        <Input name="lastName" label="Last Name" />
+        <Submit />
+      </Form>
     )
   }
 }
 ```
 
-This implementation using raw html elements gives you the freedom to apply whatever styles you need in the manner that fits your project, the purpose of package is to handle the heavy lifting of deciding what to validate when, and how to pass data up to the parent store.
+### Higher Order State Management
+
+For use with centralized state containers like Redux, you can manually pass a
+reference to the model and a function that dispatches an updater action just as
+in the above example.
+
+You can also create a Higher Order Component to simplify this like so:
+
+```js
+import React from 'react'
+import { string, object } from 'prop-types'
+import { connect } from 'react-redux'
+
+import { Form } from 'react-form-handler'
+
+const mapStateToProps = (state, ownProps) => ({
+  model: state[ownProps.modelName],
+})
+
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  updateModel: () => dispatch(ownProps.updateAction),
+})
+
+export const ConnectedForm = connect(mapStateToProps, mapDispatchToProps)(Form)
+
+ConnectedForm.propTypes = {
+  modelName: string.isRequired,
+  updateAction: object.isRequired,
+}
+```
+
+TODO: working example
 
 ### Customization Options
 
-
 #### Nested Fields
 
+Out of the box support for arbitrarily nested model data:
+
 ```js
-{
-  attr: val,
-  parrentAttr: {
-    childAttr: val
+model = {
+  name: 'John Smith',
+  address: {
+    street: {
+      street1: '270 Lafayette Street',
+      street2: 'Suite 10101',
+    },
+    city: 'New York',
   }
 }
-
-<Input
-  name="parrentAttr.childAttr"
-/>
+...
+<Input name="address.street.street2" /> // Suite 10101
 ```
+
 #### Validations
+
+Validations are passed along at the input level as an array:
+
 ```js
-import { isPositiveInteger, cannotExceed } from 'react-form-handler/validations'
+import { Validations } from 'react-form-handler'
+const { isPositiveInteger, cannotExceed } = Validations
 
 <Input
   name="age"
@@ -147,19 +163,59 @@ import { isPositiveInteger, cannotExceed } from 'react-form-handler/validations'
   validations={[isPositiveInteger, cannotExceed(100)]}
 />
 ```
+
 ##### Custom Validations
-The core of a validation is throwing an error in context, so to add a validation the validation needs only to throw an error
+
+Validations are functions that take two arguments:
+
+1. value (required) -- the value of the field being validated
+2. model (optional) -- optionally accesses the entire form model (used in cases
+   where validations depend on the value of another field in the model)
+
+To indicate that the validation failed, throw an Error, or a simple string:
+
 ```js
-const asyncCustomValidation = (value) => { // asynchronous custom validation
-  return new Promise((res, rej) => {
-    setTimeout(() => {
-      testFails() ? rej('Async validation failed') : res()
-    }, 5000)
-  })
-}
-const customValidation = value => {  // custom synchronous validation
-  if (testFails()) {
+const customValidation = value => {
+  if (/* testFails() */) {
     throw 'Validation failed'
   }
 }
 ```
+
+Async validations are also supported natively:
+
+```js
+const asyncCustomValidation = async value => {
+  await someAsyncAction()
+  return new Promise((res, rej) => {
+    setTimeout(() => {
+      if (/* testFails() */) {
+        rej('Async validation failed')
+      } else {
+        res()
+      }
+    }, 5000)
+  })
+}
+```
+
+### A note on Context
+
+We're currently using React's
+[legacy Context API](https://reactjs.org/docs/legacy-context.html) so that the
+parent Form element can communicate with arbitrarily deeply nested descendant
+components. While the legacy Context API is deprecated starting in React 16.3,
+it will still be functional until version 17. Future versions of
+`react-form-handler` will be refactored to use the new context API.
+
+**Warning:** the usage of `PureComponents` and components that alter the
+`shouldComponentUpdate()` lifecycle hook should be avoided where possible within
+the `<Form>` element. These components can block context and will prevent the
+form from working properly.
+
+TODO:
+
+* Deeper customization with InputWrapper and SubmitWrapper
+* withForm HOC
+* persistence
+* full API docs
