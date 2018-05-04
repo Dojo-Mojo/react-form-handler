@@ -169,7 +169,7 @@ export class Form extends Component {
     const isValid = await this.validateForm()
     const { handleSubmit } = this.props
     if (isValid && handleSubmit) {
-      handleSubmit(this.props.model)
+      handleSubmit(this.model)
     }
   }
 
