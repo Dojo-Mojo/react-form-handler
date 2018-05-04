@@ -6,16 +6,11 @@ import { format } from 'd3-format'
 
 import get from 'lodash.get'
 
-const getFormattedNumber = (value, formatter) => {
-  if (formatter) {
-    return formatter(value)
-  }
-
-  if (!value || isNaN(value)) {
+const getFormattedNumber = (value, formatter = format(',')) => {
+  if (typeof value === 'undefined' || value === '' || isNaN(value)) {
     return value
   }
-
-  return format(',')(value)
+  return formatter(value)
 }
 
 // provides render prop accessing form model/actions from context provided
@@ -30,7 +25,7 @@ export class InputWrapper extends Component {
   }
 
   state = {
-    editing: false
+    editing: false,
   }
 
   static defaultProps = {
@@ -55,40 +50,28 @@ export class InputWrapper extends Component {
     this.context.formActions.unregisterValidations(this.props.name)
   }
 
-  showRealValue = (e) => {
-    this.setState({
-      editing: true
-    })
-  }
+  showRealValue = () => this.setState({ editing: true })
 
-  showPrettyValueAndValidate = async (e) => {
-    const {
-      formActions: { validateField },
-    } = this.context
-
+  showPrettyValueAndValidate = async () => {
+    const { formActions: { validateField } } = this.context
     const { name } = this.props
 
     await validateField(name)
 
-    this.setState({
-      editing: false
-    })
+    this.setState({ editing: false })
   }
 
   formatNumber = () => {
-    const {
-      form: { formModel, errors, validating, formDisabled },
-      formActions: { updateFormModel, validateField },
-    } = this.context
-    const {
-      editing
-    } = this.state
+    const { form: { formModel } } = this.context
+    const { editing } = this.state
     const { name, render, customValue, formatNumber } = this.props
     if (customValue) {
       return customValue(formModel)
     }
     const value = get(formModel, name, '')
-    return this.props.type === 'number' && !editing ? getFormattedNumber(value, formatNumber) : value
+    return this.props.type === 'number' && !editing
+      ? getFormattedNumber(value, formatNumber)
+      : value
   }
 
   render() {
@@ -97,7 +80,7 @@ export class InputWrapper extends Component {
       formActions: { updateFormModel, validateField },
     } = this.context
 
-    const { name, type, render, customValue, formatNumber } = this.props
+    const { name, type, render, customValue } = this.props
 
     return render({
       value: this.formatNumber(),
@@ -107,7 +90,7 @@ export class InputWrapper extends Component {
       inputValidating: validating[name],
       formDisabled,
       onFocus: this.showRealValue,
-      onBlur: this.showPrettyValueAndValidate
+      onBlur: this.showPrettyValueAndValidate,
     })
   }
 }
