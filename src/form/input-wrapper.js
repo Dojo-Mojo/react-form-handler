@@ -7,7 +7,6 @@ import { format } from 'd3-format'
 import get from 'lodash.get'
 
 const getFormattedNumber = (value, formatter = format(',')) => {
-  value = value && value.toString().trim().replace(/,/g, '')
   if (typeof value === 'undefined' || value === '' || isNaN(value)) {
     return value
   }

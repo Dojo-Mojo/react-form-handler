@@ -131,7 +131,6 @@ export class Form extends Component {
       const formModel = merge({}, this.state.formModel, name)
       return this.setState({ formModel })
     }
-    value = value && value.toString().trim().replace(/,/g, '')
     const typedValue =
       type === 'number' && !isNaN(value) ? Number(value) : value
     const formModel = merge({}, this.state.formModel, set({}, name, typedValue))
