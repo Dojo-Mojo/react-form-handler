@@ -18,7 +18,7 @@ export const isPositiveOrZero = value => {
   }
 }
 
-const isPositiveInteger = (value) => {
+export const isPositiveInteger = (value) => {
   const number = _getNumber(value)
   if (!_isPositive(number) || !_isInteger(number)) {
     throw 'Must be positive integer'
@@ -27,7 +27,7 @@ const isPositiveInteger = (value) => {
 
 const _defCannotExceedError = max => `Cannot exceed ${format(',')(max)}`
 
-const cannotExceed = (max, error = _defCannotExceedError) => value => {
+export const cannotExceed = (max, error = _defCannotExceedError) => value => {
   const number = _getNumber(value)
   if (number > max) {
     throw error(max, value)
