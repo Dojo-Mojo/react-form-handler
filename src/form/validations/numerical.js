@@ -3,8 +3,10 @@ import { format } from 'd3-format'
 const _isPositive = value => value && +value > 0
 const _isPositiveOrZero = value => value && +value >= 0
 const _isInteger = value => Math.round(+value) === +value
+const _getNumber = value => value.replace(/,/g, '')
 
 export const isPositive = value => {
+  const number = _getNumber(value)
   if (!_isPositive(value)) {
     throw 'Must be positive'
   }
@@ -16,16 +18,18 @@ export const isPositiveOrZero = value => {
   }
 }
 
-export const isPositiveInteger = value => {
-  if (!_isPositive(value) || !_isInteger(value)) {
+const isPositiveInteger = (value) => {
+  const number = _getNumber(value)
+  if (!_isPositive(number) || !_isInteger(number)) {
     throw 'Must be positive integer'
   }
 }
 
 const _defCannotExceedError = max => `Cannot exceed ${format(',')(max)}`
 
-export const cannotExceed = (max, error = _defCannotExceedError) => value => {
-  if (+value > max) {
+const cannotExceed = (max, error = _defCannotExceedError) => value => {
+  const number = _getNumber(value)
+  if (number > max) {
     throw error(max, value)
   }
 }
